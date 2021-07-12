@@ -3,23 +3,31 @@ import problemsService from '../services/problems.service';
 import debug from 'debug';
 
 const log: debug.IDebugger = debug('app:problems-controller');
-class ProblemsController {
+export class ProblemsController {
     async listProblems(req: express.Request, res: express.Response) {
-        const problem = await problemsService.list(100, 0);
+        console.log("problemsController listProblems func");
+        const problem = await problemsService.list();
         res.status(200).send(problem);
+    }
+    async getProblemHoldList(req: express.Request, res: express.Response){
+        console.log("problemsController getProblemHoldList func");
+        const holdList = await problemsService.getProblemHoldList(req.params.id);
+        res.status(201).send(holdList)
+    }
+    async createProblem(req: express.Request, res: express.Response) {
+        console.log("problemsController createProblem func");
+        const problem = await problemsService.create(req.body);
+        // send problem id to client
+        res.status(201).send({ problem });
     }
 
     async getProblemById(req: express.Request, res: express.Response) {
-        const problem = await problemsService.readById(req.params.id);
-        res.status(200).send(problem);
+        console.log("controller get Problem by Id", req.params.id)
+        const problem = await problemsService.searchById(req.params.id);
+        res.status(201).send(problem);
     }
 
-    async createProblem(req: express.Request, res: express.Response) {
-        const problemId = await problemsService.create(req.body);
-        res.status(201).send({ id: problemId });
-    }
-
-    async patch(req: express.Request, res: express.Response) {
+    /*async patch(req: express.Request, res: express.Response) {
         log(await problemsService.patchById(req.body.id, req.body));
         res.status(204).send();
     }
@@ -34,10 +42,10 @@ class ProblemsController {
         res.status(204).send();
     }
 
-    async removeProblem(req: express.Request, res: express.Response) {
+    async removeProblemById(req: express.Request, res: express.Response) {
         log(await problemsService.deleteById(req.params.problemId));
         res.status(204).send();
-    }
+    }*/
 }
 
 export default new ProblemsController();

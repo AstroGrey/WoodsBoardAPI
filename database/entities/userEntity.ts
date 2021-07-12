@@ -1,25 +1,24 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
-import shortid from 'shortid';
+import {BaseEntity, Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+
 
 @Entity()
-export class UserEntity {
-
-    constructor(first: string, last: string, username: string){
-        this.firstName = first;
-        this.lastName = last;
-        this.username = username;
-        this.id = shortid.generate();
-    }
+export class UserEntity extends BaseEntity{
 
     @PrimaryGeneratedColumn()
-    id: string;
+    id!: number;
 
     @Column()
-    firstName: string;
+    firstName!: string;
 
     @Column()
-    lastName: string;
+    lastName!: string;
 
     @Column()
-    username: string;
+    username!: string;
+
+    @Column()
+    email!: string;
+
+    @Column()
+    password!: string;
 }

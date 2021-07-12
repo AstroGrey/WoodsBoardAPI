@@ -1,38 +1,39 @@
-import shortid from 'shortid';
+
 import debug from 'debug';
-import { CreateUserDto } from '../dto/create.user.dto';
-import { PatchUserDto } from '../dto/patch.user.dto';
-import { PutUserDto } from '../dto/put.user.dto';
+import { UserEntity } from '../../database/entities/UserEntity';
+import { UserRepository } from '../../database/userRepository';
+import UsersMiddleware from '../middleware/users.middleware';
 
 const log: debug.IDebugger = debug('app:in-memory-dao');
 
-/**
- * NEVER USER THIS CLASS IN REAL LIFE.
- * This class was created to ease the explanation of other topics in the corresponding article.
- * For any real-life scenario, consider using an ODM/ORM to manage your own database in a better way.
- */
-class UsersDao {
-    users: Array<CreateUserDto> = [];
+export class UsersDao {
+    usersRepos = new UserRepository();
 
     constructor() {
         log('Created new instance of UsersDao');
     }
 
-    async addUser(user: CreateUserDto) {
-        user.id = shortid.generate();
-        this.users.push(user);
-        return user.id;
+    async addUser(user: UserEntity) {
+        this.usersRepos.createUser(user);
     }
 
     async getUsers() {
-        return this.users;
+        return this.usersRepos.getAllUsers();
     }
 
     async getUserById(userId: string) {
-        return this.users.find((user: { id: string }) => user.id === userId);
+        return this.usersRepos.searchById(userId);
     }
 
-    async putUserById(userId: string, user: PutUserDto) {
+    async getUserByUsername(username: string) {
+        return this.usersRepos.searchByUsername(username);
+    }
+
+    async getUserByEmail(email: string){
+        return this.usersRepos.searchByEmail(email);
+    }
+
+    /*(async putUserById(userId: string, user: PutUserDto) {
         const objIndex = this.users.findIndex(
             (obj: { id: string }) => obj.id === userId);
         this.users.splice(objIndex, 1, user);
@@ -64,28 +65,5 @@ class UsersDao {
             (obj: { id: string }) => obj.id === userId);
         this.users.splice(objIndex, 1);
         return `${userId} removed`;
-    }
-
-    async getUserByEmail(email: string) {
-        const objIndex = this.users.findIndex(
-            (obj: { email: string }) => obj.email === email);
-        let currentUser = this.users[objIndex];
-        if (currentUser) {
-            return currentUser;
-        } else {
-            return null;
-        }
-    }
-    async getUserByUsername(username: string) {
-        const objIndex = this.users.findIndex(
-            (obj: { username: string }) => obj.username === username);
-        let currentUser = this.users[objIndex];
-        if (currentUser) {
-            return currentUser;
-        } else {
-            return null;
-        }
-    }
+    }*/
 }
-
-export default new UsersDao();

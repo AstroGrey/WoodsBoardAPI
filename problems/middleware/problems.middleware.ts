@@ -9,11 +9,16 @@ class ProblemsMiddleware {
         res: express.Response,
         next: express.NextFunction
     ) {
-        if (req.body && req.body.problemName && req.body.problemGrade && req.body.username && req.body.authorFirstName && req.body.authorLastName && req.body.holdList) {  
+        if (req.body && 
+            req.body.problemName && 
+            req.body.problemGrade && 
+            req.body.author &&
+            //req.body.angle &&
+            req.body.holdList){  
             next();
         } else {
             res.status(400).send({
-                error: `Invalid fields. Please try again idiot`,
+                error: `Invalid fields. Please try again`,
             });
         }
     }
@@ -27,7 +32,7 @@ class ProblemsMiddleware {
         if (problem) {
             res.status(400).send({ error: `Problem name already exists` }); // user exists, cannot create user
         } else {
-            next(); // user doesnt exist, can move on to create
+            next();
         }
     }
 
@@ -36,7 +41,7 @@ class ProblemsMiddleware {
         res: express.Response,
         next: express.NextFunction
     ) {
-        const problem = await problemService.readById(req.params.problemId); // searches for user id
+        const problem = await problemService.searchById(req.params.id); // searches for user id
         if (problem) { 
             next();
         } else { 
@@ -51,7 +56,7 @@ class ProblemsMiddleware {
         res: express.Response,
         next: express.NextFunction
     ) {
-        req.body.id = req.params.problemId;
+        req.body.id = req.params.id;
         next();
     }
 }

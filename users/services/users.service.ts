@@ -1,20 +1,24 @@
-import UsersDao from '../daos/users.dao';
-import { CRUD } from '../../common/interfaces/crud.interface';
-import { CreateUserDto } from '../dto/create.user.dto';
-import { PutUserDto } from '../dto/put.user.dto';
-import { PatchUserDto } from '../dto/patch.user.dto';
+import { UsersDao } from '../daos/users.dao';
+import { UserEntity } from '../../database/entities/userEntity';
+ 
+class UsersService{
+    UserDao = new UsersDao();
 
-class UsersService implements CRUD {
-    async create(resource: CreateUserDto) {
-        return UsersDao.addUser(resource);
+    async create(resource: UserEntity) {
+        return this.UserDao.addUser(resource);
     }
 
-    async deleteById(id: string) {
+    async list(){
+        return this.UserDao.getUsers();
+    }
+    async getUserByEmail(email: string) {
+        return this.UserDao.getUserByEmail(email);
+    }
+    async getUserByUsername(username: string){
+        return this.UserDao.getUserByUsername(username);
+    }
+    /*(async deleteById(id: string) {
         return UsersDao.removeUserById(id);
-    }
-
-    async list(limit: number, page: number) {
-        return UsersDao.getUsers();
     }
 
     async patchById(id: string, resource: PatchUserDto): Promise<any> {
@@ -27,16 +31,7 @@ class UsersService implements CRUD {
 
     async readById(id: string) {
         return UsersDao.getUserById(id);
-    }
-    async readByUsername(username: string) {
-        return UsersDao.getUserByUsername(username);
-    }
-    async getUserByEmail(email: string) {
-        return UsersDao.getUserByEmail(email);
-    }
-    async getUserByUsername(username: string) {
-        return UsersDao.getUserByUsername(username);
-    }
+    }*/
 }
 
 export default new UsersService();
