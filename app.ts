@@ -8,9 +8,11 @@ import { UsersRoutes } from './users/users.routes.config';
 import { ProblemsRoutes } from './problems/problems.routes';
 import debug from 'debug';
 import "reflect-metadata";
-import { createConnection } from "typeorm";
-//import { ProblemEntity } from "./database/entities/problemEntity";
-//import { UserEntity } from "./database/entities/userEntity";
+import { createConnection, Connection } from "typeorm";
+import { ProblemEntity } from "./database/entities/problemEntity";
+import { UserEntity } from "./database/entities/userEntity";
+import { HoldEntity } from "./database/entities/holdEntity";
+import { BaseHoldEntity } from './database/entities/baseHoldEntity';
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
@@ -57,24 +59,27 @@ app.get('/', (req: express.Request, res: express.Response) => {
 
 // Start our server at specified port
 server.listen(port, () => { 
-    debugLog(`Heh its the weed number http://localhost:${port}`);
+    //debugLog(`Heh its the weed number http://localhost:${port}`);
     routes.forEach((route: CommonRoutesConfig) => { // for each route created and added to the array
         debugLog(`Routes configured for ${route.getName()}`);
     });
 });
 
 // Database Connection
+//const connection = await 
 createConnection({
-    type: "mysql",
+    // use ormconfig.json here 
+    type: "postgres",
     host: "localhost",
     port: 5432,
-    username: "root",
-    password: "admin",
-    database: "test",
+    username: "postgres",
+    password: "toolis2cool",
+    name: "WoodsTestDB",
     entities: [
-        __dirname + "/database/entities/*.ts"
-        //ProblemEntity,
-        //UserEntity
+        ProblemEntity,
+        UserEntity,
+        HoldEntity,
+        BaseHoldEntity
     ],
     synchronize: true,
     logging: false

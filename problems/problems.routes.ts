@@ -17,21 +17,20 @@ export class ProblemsRoutes extends CommonRoutesConfig {
                 ProblemsController.createProblem
             );
 
-        this.app.param(`problemId`, ProblemsMiddleware.extractProblemId);
+        this.app.param(`id`, ProblemsMiddleware.extractProblemId);
         this.app
-            .route(`/problems/:problemId`)
+            .route(`/problems/:id`)
             .all(ProblemsMiddleware.validateProblemExists)
             .get(ProblemsController.getProblemById)
-            .delete(ProblemsController.removeProblem);
-
-        this.app.put(`/problems/:problemId`, [
+            //.delete(ProblemsController.removeProblem);
+        /*this.app.put(`/problems/:id`, [
             ProblemsMiddleware.validateRequiredProblemBodyFields,
-            ProblemsController.put,
+            //ProblemsController.put,
         ]);
 
-        this.app.patch(`/problems/:problemId`, [
-            ProblemsController.patch,
-        ]);
+        this.app.patch(`/problems/:id`, [
+           // ProblemsController.patch,
+        ]);*/
 
         return this.app;
     }

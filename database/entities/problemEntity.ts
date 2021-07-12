@@ -1,22 +1,12 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
-import { hold } from  '../../common/holdClass';
+import {BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
+import { HoldEntity } from "./holdEntity";
+import { hold } from "../../common/holdClass";
 
 @Entity()
-export class ProblemEntity{
+export class ProblemEntity{ // extends BaseEntity{
 
-    /*constructor(title: string, grade: number, username: string, holds: hold[]){
-        this.problemName = title;
-        this.author = username;
-        this.problemGrade = grade;
-        this.id = shortid.generate();
-        this.holdList = [];
-        var length; 
-        for(length in holds){
-            this.holdList[length] = new hold(holds[length].getType(), holds[length].getLocation());
-        }
-    }*/
     @PrimaryGeneratedColumn()
-    id!: string;
+    id!: number;
 
     @Column()
     problemName!: string;
@@ -27,6 +17,15 @@ export class ProblemEntity{
     @Column()
     problemGrade!: number;
 
-    @Column()
-    holdList!: Array<hold>;
+    @Column({default: 0})
+    holdCount!: number;
+
+    @OneToMany(type => HoldEntity, holdEntity => holdEntity.problem)
+    holdList!: HoldEntity[];
+
+    //@Column()
+    //angle!: number;
+
+    //@Column()
+    //datePublished!: string;
 }

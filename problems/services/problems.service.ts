@@ -1,39 +1,45 @@
-import ProblemsDao from '../daos/problems.dao';
-import { CRUD } from '../../common/interfaces/crud.interface';
-import { CreateProblemDto } from '../dto/create.problem.dto';
-import { PutProblemDto } from '../dto/put.problems.dto';
-import { PatchProblemDto } from '../dto/patch.problem.dto';
+import { problemRepository } from '../../database/problemsRepository';
+import { ProblemEntity } from '../../database/entities/problemEntity';
 
-class ProblemsService implements CRUD {
-    async create(resource: CreateProblemDto) {
-        return ProblemsDao.addProblem(resource);
+class ProblemsService{ // implements CRUD {
+    ProbsRepos = new problemRepository();
+
+    async create(resource: ProblemEntity) {
+        console.log("problemsService create func");
+        return this.ProbsRepos.createProblem(resource);
     }
 
-    async deleteById(id: string) {
-        return ProblemsDao.removeProblemById(id);
+    async list(){
+        console.log("problemsService list func");
+        return this.ProbsRepos.getAllProblems();
     }
 
-    async list(limit: number, page: number) {
-        return ProblemsDao.getProblems();
+    async getProblemHoldList(id: string){ 
+        console.log("problemsService problemHoldList func");
+        return this.ProbsRepos.getProblemHoldList(id);
+    }
+
+    /*async deleteById(id: string) {
+        return ProbsRepos.removeProblemById(id);
     }
 
     async patchById(id: string, resource: PatchProblemDto): Promise<any> {
-        return ProblemsDao.patchProblemById(id, resource);
+        return ProbsRepos.patchProblemById(id, resource);
     }
 
     async putById(id: string, resource: PutProblemDto): Promise<any> {
-        return ProblemsDao.putProblemById(id, resource);
-    }
+        return ProbsRepos.putProblemById(id, resource);
+    }*/
 
-    async readById(id: string) {
-        return ProblemsDao.getProblemById(id);
+    async searchById(id: string) {
+        return this.ProbsRepos.searchById(id);
     }
 
     async getByAuthor(authorUsername: string) {
-        return ProblemsDao.getProblemByAuthor(authorUsername);
+        return this.ProbsRepos.searchByUsername(authorUsername);
     }
     async getByName(name: string) {
-        return ProblemsDao.getProblemByName(name);
+        return this.ProbsRepos.searchByName(name);
     }
 }
 
