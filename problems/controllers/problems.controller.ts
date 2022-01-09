@@ -6,46 +6,49 @@ const log: debug.IDebugger = debug('app:problems-controller');
 export class ProblemsController {
     async listProblems(req: express.Request, res: express.Response) {
         console.log("problemsController listProblems func");
-        const problem = await problemsService.list();
-        res.status(200).send(problem);
-    }
-    async getProblemHoldList(req: express.Request, res: express.Response){
-        console.log("problemsController getProblemHoldList func");
-        const holdList = await problemsService.getProblemHoldList(req.params.id);
-        res.status(201).send(holdList)
+        const problems = await problemsService.list();
+        res.status(200).send(problems);
     }
     async createProblem(req: express.Request, res: express.Response) {
-        console.log("problemsController createProblem func");
+        console.log("problemsController createProblem func", req.body);
         const problem = await problemsService.create(req.body);
-        // send problem id to client
         res.status(201).send({ problem });
     }
-
     async getProblemById(req: express.Request, res: express.Response) {
         console.log("controller get Problem by Id", req.params.id)
         const problem = await problemsService.searchById(req.params.id);
-        res.status(201).send(problem);
+        res.status(201).send({ problem });
     }
-
-    /*async patch(req: express.Request, res: express.Response) {
-        log(await problemsService.patchById(req.body.id, req.body));
-        res.status(204).send();
+    async deleteAllProblems(req: express.Request, res: express.Response){
+        console.log("controller deleteAllProblems")
+        await problemsService.deleteProblems();
+        res.status(204).send("All problems deleted");
     }
-
-    async put(req: express.Request, res: express.Response) {
-        log(
-            await problemsService.putById(req.params.problemId, {
-                id: req.params.problemId,
-                ...req.body,
-            })
-        );
-        res.status(204).send();
+    async patchById(req: express.Request, res: express.Response) {
+        console.log(req.body);
+        const problem = await problemsService.patchById(req.body.id, req.body);
+        res.status(201).send({ problem });
     }
-
     async removeProblemById(req: express.Request, res: express.Response) {
-        log(await problemsService.deleteById(req.params.problemId));
-        res.status(204).send();
-    }*/
+        console.log("controller removeProblemById", req.params.id);
+        await problemsService.deleteById(req.params.id);
+        res.status(204).send("Problem deleted");
+    }
+    async logSend(req: express.Request, res: express.Response){
+        console.log("controller logSend");
+        await problemsService.logSend(req.body);
+        res.status(204).send("Log recorded");
+    }
+    async listProblemsByAngleAndGrade(req: express.Request, res: express.Response) {
+        console.log("controller rlistProblemsByAngleAndGrade", req.params.angle, req.params.grade);
+        const problem = await problemsService.listByAngleAndGrade(req.params.angle, req.params.grade);
+        res.status(204).send(problem);
+    }
+    async listProblemsByAngle(req: express.Request, res: express.Response) {
+        console.log("problemsController listProblemsByAngle func");
+        const problems = await problemsService.listByAngle(req.params.angle);
+        res.status(200).send(problems);
+    }
 }
 
 export default new ProblemsController();

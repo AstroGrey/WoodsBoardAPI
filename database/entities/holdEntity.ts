@@ -1,23 +1,22 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
-import { ProblemEntity  } from "./problemEntity";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne} from "typeorm";
 import { BaseHoldEntity } from "./baseHoldEntity";
-import { hold } from "../../common/holdClass";
+import { ProblemEntity  } from "./problemEntity";
 
-@Entity()
+@Entity("HoldEntity")
 export class HoldEntity{//} extends BaseHoldEntity{
 
     // Unique id to be stored in array in problems table (random string of characters)
     @PrimaryGeneratedColumn()
-    id!: string;
+    id!: number;
 
-    // foot, start, finish, hand
+    // foot = 3, start = 1, finish = 4, hand = 2
     @Column()
     type!: string;
 
-    @Column()
-    baseHoldLocation!: number;
+    @ManyToOne(() => BaseHoldEntity)
+    baseHoldId!: number;
 
     // which problem the hold belongs to
-    @ManyToOne(type => ProblemEntity, ProblemEntity => ProblemEntity.holdList)
+    @ManyToOne(() => ProblemEntity, problem => problem.holdList)
     problem!: number;
 }

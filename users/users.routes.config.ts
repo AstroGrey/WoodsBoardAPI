@@ -15,17 +15,18 @@ export class UsersRoutes extends CommonRoutesConfig {
             .post(
                 UsersMiddleware.validateRequiredUserBodyFields, // check if appropriate amount of fields
                 UsersMiddleware.validateEmailFormat,
-                //UsersMiddleware.validateSameEmailDoesntExist,
-                //UsersMiddleware.validateSameUsernameDoesntExist,
+                UsersMiddleware.validateSameEmailDoesntExist,
+                UsersMiddleware.validateSameUsernameDoesntExist,
                 UsersController.createUser
-            );
+            )
+            .delete();
 
         this.app.param(`userId`, UsersMiddleware.extractUserId);
         this.app
             .route(`/users/:userId`)
-            //.all(UsersMiddleware.validateUserIDExists)
-            //.get(UsersController.getUserById)
-            //.delete(UsersController.removeUser);
+            .all(UsersMiddleware.validateUserIDExists)
+            .get(UsersController.getUserById)
+            .delete(UsersController.removeUser);
 
         this.app.put(`/users/:userId`, [
             UsersMiddleware.validateRequiredUserBodyFields,
@@ -41,8 +42,8 @@ export class UsersRoutes extends CommonRoutesConfig {
         this.app
             .route(`/users/:username`)
             .all(UsersMiddleware.validateUsernameExists)
-            //.get(UsersController.getUserById)
-            //.delete(UsersController.removeUser);
+            .get(UsersController.getUserById)
+            .delete(UsersController.removeUser);
 
         return this.app;
     }

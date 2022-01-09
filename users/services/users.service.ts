@@ -1,37 +1,33 @@
-import { UsersDao } from '../daos/users.dao';
-import { UserEntity } from '../../database/entities/userEntity';
- 
+import { ClientUserEntity } from '../../common/interfaces/clientUserEntiy';
+import { UserRepository } from '../../database/userRepository';
+
 class UsersService{
-    UserDao = new UsersDao();
+    usersRepos = new UserRepository();
 
-    async create(resource: UserEntity) {
-        return this.UserDao.addUser(resource);
+    async create(resource: ClientUserEntity) {
+        return this.usersRepos.createUser(resource);
     }
-
     async list(){
-        return this.UserDao.getUsers();
+        return this.usersRepos.getAllUsers();
     }
     async getUserByEmail(email: string) {
-        return this.UserDao.getUserByEmail(email);
+        return this.usersRepos.searchByEmail(email);
     }
     async getUserByUsername(username: string){
-        return this.UserDao.getUserByUsername(username);
+        return this.usersRepos.searchByUsername(username);
     }
-    /*(async deleteById(id: string) {
-        return UsersDao.removeUserById(id);
+    async deleteById(id: string) {
+        return this.usersRepos.removeById(id);
     }
-
-    async patchById(id: string, resource: PatchUserDto): Promise<any> {
-        return UsersDao.patchUserById(id, resource);
-    }
-
-    async putById(id: string, resource: PutUserDto): Promise<any> {
-        return UsersDao.putUserById(id, resource);
-    }
-
     async readById(id: string) {
-        return UsersDao.getUserById(id);
-    }*/
+        return this.usersRepos.searchById(id);
+    }
+    async deleteUsers() {
+        return this.usersRepos.deleteAllUsers();
+    }
+    async patchById(id: string, resource: ClientUserEntity): Promise<any> {
+        return this.usersRepos.patchUserById(id, resource);
+    }
 }
 
 export default new UsersService();

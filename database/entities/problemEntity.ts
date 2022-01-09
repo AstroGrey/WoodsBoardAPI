@@ -1,9 +1,10 @@
-import {BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToMany, ManyToOne} from "typeorm";
 import { HoldEntity } from "./holdEntity";
-import { hold } from "../../common/holdClass";
+import { UserEntity } from "./userEntity";
+import { LogSendEntity } from "./logSendEntity";
 
-@Entity()
-export class ProblemEntity{ // extends BaseEntity{
+@Entity("ProblemEntity")
+export class ProblemEntity{
 
     @PrimaryGeneratedColumn()
     id!: number;
@@ -11,21 +12,49 @@ export class ProblemEntity{ // extends BaseEntity{
     @Column()
     problemName!: string;
 
-    @Column()
-    author!: string;
-
+    @ManyToOne(() => UserEntity, user => user.publishedProblems)
+    authorEntity!: UserEntity;
+    
     @Column()
     problemGrade!: number;
 
     @Column({default: 0})
+    repeats?: number;
+
+    @Column({default: 0})
+    communitySuggestedGrade?: number;
+
+    @Column()
     holdCount!: number;
 
-    @OneToMany(type => HoldEntity, holdEntity => holdEntity.problem)
+    @Column({default: false})
+    isBenchmark?: boolean;
+
+    @Column({default: false})
+    isProject?: boolean;
+
+    @OneToMany(() => HoldEntity, hold => hold.problem, { cascade: true})
     holdList!: HoldEntity[];
 
-    //@Column()
-    //angle!: number;
+    @Column()
+    angle!: number;
 
-    //@Column()
-    //datePublished!: string;
+    // If true, matching is allowed. If false, no matching
+    @Column({default: true})
+    matching?: boolean; 
+
+    @Column()
+    datePublished!: string;
+
+    @Column({default: 0})
+    proposedGrade?: number;
+
+    @Column({default: 0})
+    totalLogLikes?: number;
+
+    @Column({default: 0})
+    totalLogDislikes?: number;
+
+    @OneToMany(() => LogSendEntity, logSend => logSend.problem, {eager: true})
+    logs?: LogSendEntity[];
 }

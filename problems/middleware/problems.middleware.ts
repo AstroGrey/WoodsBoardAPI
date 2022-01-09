@@ -9,14 +9,18 @@ class ProblemsMiddleware {
         res: express.Response,
         next: express.NextFunction
     ) {
-        if (req.body && 
-            req.body.problemName && 
+        console.log(req.body)
+        if (req.body){ 
+            /*req.body.problemName && 
             req.body.problemGrade && 
             req.body.author &&
-            //req.body.angle &&
-            req.body.holdList){  
+            req.body.angle &&
+            req.body.isBenchmark &&
+            req.body.matching &&
+            req.body.holdList){  */
             next();
-        } else {
+        } 
+        else {
             res.status(400).send({
                 error: `Invalid fields. Please try again`,
             });
@@ -41,12 +45,14 @@ class ProblemsMiddleware {
         res: express.Response,
         next: express.NextFunction
     ) {
+        console.log("Validating if Problem exists");
         const problem = await problemService.searchById(req.params.id); // searches for user id
         if (problem) { 
+            console.log("Problem exists");
             next();
         } else { 
             res.status(404).send({
-                error: `Problem ${req.params.problemId} not found`, 
+                error: `Problem ${req.params.id} not found`, 
             });
         }
     }
@@ -57,6 +63,24 @@ class ProblemsMiddleware {
         next: express.NextFunction
     ) {
         req.body.id = req.params.id;
+        next();
+    }
+
+    async extractProblemAngle(
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+    ) {
+        req.body.angle = req.params.angle;
+        next();
+    }
+
+    async extractProblemGrade(
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+    ) {
+        req.body.grade = req.params.grade;
         next();
     }
 }

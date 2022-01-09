@@ -10,11 +10,36 @@ class UsersMiddleware {
         res: express.Response,
         next: express.NextFunction
     ) {
-        if (req.body && req.body.email && req.body.password && req.body.username && req.body.firstName && req.body.lastName) {
+        if (req.body){ 
+            if(!req.body.email){
+                res.status(400).send({
+                    error: `Invalid email`,
+                });
+            }
+            else if(!req.body.password){
+                res.status(400).send({
+                    error: `Invalid password`,
+                });
+            }
+            else if(!req.body.username){
+                res.status(400).send({
+                    error: `Invalid username`,
+                });
+            }
+            else if(!req.body.firstName){
+                res.status(400).send({
+                    error: `Invalid first name`,
+                });
+            }
+            else if(!req.body.lastName){
+                res.status(400).send({
+                    error: `Invalid last name`,
+                });
+            }
             next();
         } else {
             res.status(400).send({
-                error: `Invalid fields. Please try again idiot`,
+                error: `Invalid fields. Please try again`,
             });
         }
     }
@@ -52,7 +77,16 @@ class UsersMiddleware {
         res: express.Response,
         next: express.NextFunction
     ) {
-        const user = await userService.getUserByUsername(req.params.username); // searches for user id
+        var username =  "";
+        if(req.params.username){
+            console.log("user validateUsernameExists", req.params.username);
+            username = req.params.username;
+        }
+        else if(req.params.author){
+            console.log("problem validateUsernameExists", req.params.author);
+            username = req.params.author;
+        }
+        const user = await userService.getUserByUsername(username); // searches for user id
         if (user) { // user id exists, move on
             next();
         } else { // user id does not exist, error
@@ -104,7 +138,7 @@ class UsersMiddleware {
         } else {
             res.status(400).send({ error: `Invalid email` }); // user email doesnt exist
         }
-    }
+    }*/
 
     async validateUserIDExists( // response to '/users/:userId' request
         req: express.Request,
@@ -119,7 +153,7 @@ class UsersMiddleware {
                 error: `User ${req.params.userId} not found`, 
             });
         }
-    }*/
+    }
 }
 
 export default new UsersMiddleware();

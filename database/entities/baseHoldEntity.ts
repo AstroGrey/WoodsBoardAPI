@@ -4,7 +4,7 @@ import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
 their position on the board, descriptors (crimpy, slopy, pinch, etc),
 and an ID to be used in the problemHoldList
 */
-@Entity()
+@Entity("BaseHoldEntity")
 export class BaseHoldEntity{
 
     @PrimaryGeneratedColumn()
@@ -12,6 +12,9 @@ export class BaseHoldEntity{
 
     @Column()
     descriptor!: string;
+
+    @Column()
+    hold!: string;
 
     @Column()
     location!: number;
